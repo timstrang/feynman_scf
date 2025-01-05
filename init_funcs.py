@@ -29,6 +29,11 @@ def array2dct_ind(array, cell_dct):
     return None
 
 
+def dict_ind2array(index, grid_shape):
+    b = grid_shape[1]
+    return [index // b, n % b]
+
+
 def cond_list2array(obj):
     if isinstance(obj, list):
         obj = np.asarray(obj)
@@ -54,7 +59,6 @@ def generate_cell_dct(size, valid_moves, v_func, k_func):
     for cell_id in cell_dct.keys():
         cell_dct[cell_id] += [v_func(cell_dct, cell_id)]
         cell_dct[cell_id][1] = k_func(cell_dct, cell_id)
-
     return cell_dct
 
 
@@ -66,6 +70,10 @@ def get_radial_dist(cell_dct, cell_id):
 def get_harmonic_V(cell_dct, cell_id):
     r = get_radial_dist(cell_dct, cell_id)
     return r**2
+
+
+def get_null_V(cell_dct, cell_id):
+    return 0
 
 
 def get_binary_K(cell_dct, cell_id, time_step=1, space_step=1):
