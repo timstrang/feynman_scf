@@ -15,6 +15,7 @@ from tqdm import tqdm
 def get_data_tensors(params_dct):
     cell_dct, _, prop_mat = IN.get_prop_mat(**params_dct)
 
+    # Temporary null V
     def get_v_mat(cell_dct):
         sz = params_dct["size"]
         v_mat = np.zeros([sz, sz], dtype=float)
@@ -28,7 +29,7 @@ def get_data_tensors(params_dct):
     return torch.from_numpy(v_mat).float(), torch.from_numpy(prop_mat)
 
 
-class DSet_vmat_pmat(Dataset):
+class DSet_VP(Dataset):
     def __init__(self, params_list, hyper_dct):
         self.params_list = params_list
         self.num_output_paths = hyper_dct["num_output_paths"]
@@ -44,7 +45,7 @@ class DSet_vmat_pmat(Dataset):
 def get_dataloader(params_list, hyper_dct):
     batch_size = hyper_dct["batch_size"]
     shuffle = hyper_dct["shuffle"]
-    dset = DSet_vmat_pmat(params_list, hyper_dct)
+    dset = DSet_VP(params_list, hyper_dct)
     return DataLoader(dset, batch_size=batch_size, shuffle=shuffle)
 
 
@@ -72,4 +73,3 @@ test_hyper_dct = {
 test_size_len = [(10, 3), (10, 4), (10, 7)]
 params_ls = [make_params_dct(*sl) for sl in test_size_len]
 dloader = get_dataloader(params_ls, test_hyper_dct)
-
